@@ -73,7 +73,7 @@ Each pane can be minimized or maximized within the column by clicking the minimi
 
 R is a very powerful tool for scientific analysis and data visualization. Let's suppose that you are a penguin researcher, and you have collected data from different species of penguins by measuring their anatomical features such as flipper length, body mass, beak size etc. Now you want to investigate if bill length and bill depth are related to each other.
 
-![](images/culmen_depth.png){width="405"}
+![](images/culmen_depth_modified.png){width="476"}
 
 Copy the code below and execute it in the console to find out!
 
@@ -682,4 +682,4 @@ Now create a new column called `body_mass_kg` from the column `body_mass_g` that
 
 ## Day 1 complete!
 
-Don't forget to practice the homework exercises in the `Practice Day 1.R` file!
+Don't forget to practice the homework exercises in the `Practice_Day_1.R` file!
