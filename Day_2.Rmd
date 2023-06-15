@@ -1,0 +1,84 @@
+---
+title: "Day 2"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+
+library(learnr)
+
+tutorial_options(
+  exercise.timelimit = 60,
+  # A simple checker function that just returns the message in the check chunk
+  exercise.checker = function(check_code, ...) {
+    list(
+      message = eval(parse(text = check_code)),
+      correct = logical(0),
+      type = "info",
+      location = "append"
+    )
+  }
+)
+knitr::opts_chunk$set(error = TRUE)
+
+r <- getOption("repos")
+r["CRAN"] <- "https://cloud.r-project.org/"
+options(repos = r)
+```
+
+## Let's recap Day 1
+
+-   What are variables? Where can you see all the current variables in your workspace?
+
+-   What are functions? Write out an example function.
+
+```{r, recap0, exercise=TRUE, exercise.eval = FALSE}
+```
+
+-   How would you set the working directory in RStudio? Set the working directory for today's session.
+
+-   What is the difference between a Vector and a DataFrame?
+
+-   Get the second element of the vector `x` below
+
+```{r, recap1, exercise=TRUE, exercise.eval = FALSE}
+x <- c(3,6,8,0,-1,4)
+```
+
+-   Get all elements of `x` greater than 2
+
+```{r, recap2, exercise=TRUE, exercise.eval = FALSE}
+```
+
+-   Find the sum of all elements of `x`
+
+```{r, recap3, exercise=TRUE, exercise.eval = FALSE}
+```
+
+-   Where can you look up the documentation for R functions? Find help on the function `write.csv`
+
+-   Install the `palmerpenguins` package and load it into the R workspace.
+
+```{r, recap4, exercise=TRUE, exercise.eval = FALSE}
+```
+
+-   Find the names of all the columns in the `penguins` dataframe
+
+```{r, recap5, exercise=TRUE, exercise.eval = FALSE}
+```
+
+-   Read in the file `ev_police_jan.csv` from the data folder
+
+```{r, recap6, exercise=TRUE, exercise.eval = FALSE}
+```
+
+-   Install the `palmerpenguins` package and load it into the R workspace.
+
+```{r, recap7, exercise=TRUE, exercise.eval = FALSE}
+```
