@@ -405,7 +405,7 @@ Using `x` created above: make a new variable as part of `x`, called `weeks`, tha
 ```{r, var9, exercise=TRUE, exercise.eval = FALSE}
 ```
 
-# Missing values
+## Missing values
 
 Remember: `NA` denotes a missing value.
 
@@ -431,7 +431,7 @@ penguins <- penguins[!is.na(penguins$body_mass_g),]
 
 The function `complete.cases()` can be used to find which rows have no missing values at all:
 
-## EXERCISE
+### EXERCISE
 
 Run the code to create a y data frame. Then remove the rows where the height variable has a missing value.
 
@@ -440,7 +440,7 @@ y <- data.frame(age = c(40, 38, 44, 41, 68, 6, 35, 29),
                 height = c(NA, 65, 68, 70, 63, 50, NA, 73))
 ```
 
-# Replacing Values
+## Replacing Values
 
 ```{r, replace1, exercise=TRUE, exercise.eval = FALSE}
 table(penguins$species)
@@ -462,7 +462,7 @@ penguins$species[penguins$species == "Gentoo"] <- "gentoo"  # set the value
 table(penguins$species)
 ```
 
-## EXERCISE
+### EXERCISE
 
 Using `x` created above: replace the `month` value "December" with the value "Dec" instead
 
@@ -470,7 +470,7 @@ Using `x` created above: replace the `month` value "December" with the value "De
 
 ```
 
-# Data Frames Practice
+## Data Frames Practice
 
 Here are some practice exercises for working with data frames. They all use the policing data here:
 
@@ -480,7 +480,7 @@ evp <- read.csv("data/ev_police_jan.csv")
 
 If you mess up the data frame, you can always read it back in from the file.
 
-## EXERCISE 1
+### EXERCISE 1
 
 What are the variable names, and how many observations are there?
 
@@ -488,7 +488,7 @@ What are the variable names, and how many observations are there?
 
 ```
 
-## EXERCISE 2
+### EXERCISE 2
 
 Are there any missing values in the data?
 
@@ -496,7 +496,7 @@ Are there any missing values in the data?
 
 ```
 
-## EXERCISE 3
+### EXERCISE 3
 
 What is the most common location? You may want to use the `table()` function.
 
@@ -506,7 +506,7 @@ Hint: you can use the `sort()` function in combination with the `table()` functi
 
 ```
 
-## EXERCISE 4
+### EXERCISE 4
 
 How many stops found contraband?
 
@@ -516,7 +516,7 @@ Hint (for one approach to this): if you `sum()` a boolean variable, TRUE = 1, FA
 
 ```
 
-## EXERCISE 5
+### EXERCISE 5
 
 Rename the column "raw_row_number" to "id"
 
@@ -524,7 +524,7 @@ Rename the column "raw_row_number" to "id"
 
 ```
 
-## EXERCISE 6
+### EXERCISE 6
 
 Subset the data frame to just have rows where subject_sex is "female".
 
@@ -532,7 +532,7 @@ Subset the data frame to just have rows where subject_sex is "female".
 
 ```
 
-## EXERCISE 7
+### EXERCISE 7
 
 Make a new column in the data frame called evanston that is TRUE if the location is 60201 or 60202 and FALSE otherwise.
 
@@ -540,7 +540,7 @@ Make a new column in the data frame called evanston that is TRUE if the location
 
 ```
 
-## EXERCISE 8
+### EXERCISE 8
 
 This exercise is more challenging than the others.
 
@@ -552,7 +552,7 @@ Hint: there are two observations in the data that both have the minimum vehicle_
 
 ```
 
-## EXERCISE 9
+### EXERCISE 9
 
 This exercise is more challenging than the others.
 
@@ -564,4 +564,4 @@ What percentage of Toyota drivers are male? What percentage of drivers in the da
 
 ```
 
-# Let's plot some data!
+## Data Visualization with *ggplot*
