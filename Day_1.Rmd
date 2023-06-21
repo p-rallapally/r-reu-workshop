@@ -428,6 +428,8 @@ TRUE and FALSE are important, because we can use them to select values from vect
 
 ```{r, ind2, exercise=TRUE, exercise.eval = FALSE}
 x[x > 3]
+
+x[x > 3 | x > 5] # complex expression
 ```
 
 ## EXERCISE
