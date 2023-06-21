@@ -61,7 +61,7 @@ The RStudio user interface has 4 primary panes:
 
 -   **Console** pane
 
--   **Environment** pane, containing the **Environment**, **History**, **Connections**, **Build**, **VCS** , and **Tutorial** tabs
+-   **Environment** pane, containing the **Environment**, **History**, **Connections**, and **Tutorial** tabs
 
 -   **Output** pane, containing the **Files**, **Plots**, **Packages**, **Help**, **Viewer**, and **Presentation** tabs
 
