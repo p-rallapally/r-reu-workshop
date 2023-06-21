@@ -1,0 +1,571 @@
+---
+title: "Day 3"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+editor_options:
+  chunk_output_type: console
+---
+
+# Setup
+
+This session covers some useful functions and gives examples of how to accomplish some common data tasks in R.
+
+Reading in the policing data:
+
+```{r}
+evp <- read.csv("data/ev_police_jan.csv")
+```
+
+Note: Evanston police data comes from the [Stanford Open Policing Project](https://openpolicing.stanford.edu/data/). This is a small subset of data: just January 2017.
+
+And we'll use the penguins data for some exercises too
+
+```{r}
+library(palmerpenguins)
+```
+
+# Useful functions
+
+## ifelse
+
+`ifelse()` allows you to change the values of a vector based on a conditional test. It's useful for recoding data, and you can use it in situations where you don't want to change the underlying data.
+
+The format is:
+
+```{r, eval=FALSE}
+ifelse(test_condition, value_if_true, value_if_false)
+```
+
+where the test condition is usually some comparison or operation on a vector - anything that results in TRUE or FALSE values
+
+```{r}
+x <- c(-1, 2, 3, -5, 3, NA, -4, 6)
+x >= 0
+
+ifelse(x >= 0, x, 0)  # replace negative values with 0, leave others alone
+
+ifelse(is.na(x), 0, x)  # replace missing values with 0, leave others alone
+
+ifelse(x %% 2 == 0, "even", "odd")  ## remainder of dividing x by 2 is 0 
+```
+
+There's also the useful `replace_na()` function in the tidyr package and `na_if()` in dplyr.
+
+## EXERCISE
+
+Where the value in the vector below is positive, take the square root. Where it is negative, substitute in `NA`.
+
+```{r}
+y <- c(4, -1, 3, 6, -7, 10, 20)
+```
+
+## %in%
+
+`%in%` returns TRUE if the value on the left is in the vector on the right, FALSE otherwise. Unlike `==`, if the value on the left is `NA`, it will return FALSE unless `NA` is also in the vector on the right:
+
+```{r}
+x <- c(-1, 2, 3, -5, 3, NA, -4, 6)
+x %in% c(1, 2, 3)
+x == 1 | x == 2 | x == 3
+```
+
+```{r}
+state.name  # built-in vector in R
+
+ifelse(state.name %in% c("Alaska", "Hawaii"), NA, state.name)
+```
+
+## EXERCISE
+
+Select the rows from the `evp` data where the vehicle make is one of FIAT, DATS, GEO, JAGU, or PEUG
+
+```{r}
+
+```
+
+## paste
+
+The `paste()` function is used to join pieces of text:
+
+```{r}
+paste("Christina", "Maimone")
+```
+
+The default separator between the strings is a space, but you can change it:
+
+```{r}
+paste("Christina", "Maimone", sep="---")
+```
+
+But, I frequently want to join strings with no space between them:
+
+```{r}
+paste("Christina", "Maimone", sep="")
+```
+
+There's a shortcut for this:
+
+```{r}
+paste0("Christina", "Maimone")
+```
+
+## EXERCISE
+
+`state.abb` has two-letter abbreviations for US states. `state.region` has the region for each US state. Use `paste()` to join the info from these two vectors together, so the output has entries that look like:
+
+```         
+"AL: South"         "AK: West"          "AZ: West"          "AR: South"  ...
+```
+
+```{r}
+
+```
+
+## seq
+
+`seq()` is used to generate sequences of numbers. You can specify the interval between values or how many values you want.
+
+```{r}
+seq(from=1, to=10, by=2)
+```
+
+Note that the sequence output will only have values that are \<= the "to" value.
+
+```{r}
+seq(0, 10, length.out=4)
+```
+
+```{r}
+seq(0, 1, .1)
+```
+
+## EXERCISE
+
+Use the `seq()` function to select every 5th row from `state.x77` (it's a matrix built in to R - you can index it like a data frame).
+
+Things you need to figure out: how do you know what the sequence should go to? How do you use the result of seq() to then select the rows?
+
+```{r}
+
+```
+
+# Factors
+
+Looking at the days of the week above, the output included this text at the bottom:
+
+`Levels: Sun < Mon < Tue < Wed < Thu < Fri < Sat`
+
+This is because the days of the week were returned as a ordered factor -- a categorical variable.
+
+Factors are variables with text labels, but the set of values (called levels) that are allowed for the variable is limited, and the values optionally can have a specific order to them.
+
+## Why Do I Need Factors?
+
+Let's look at what happens with the days of the week if they are NOT a factor -- just character (text) data instead:
+
+```{r}
+library(lubridate)
+evp$Date <- ymd(evp$date)  # did this in the exercise above
+evp$dow <- as.character(wday(evp$Date, label=TRUE))  # as.character makes it not a factor - just text data
+table(evp$dow)
+```
+
+The days are in alphabetical order, not day of the week order!
+
+Or, let's make a plot of the reported race of the people stopped:
+
+```{r, fig.width=5, fig.height=3}
+library(ggplot2)
+ggplot(evp, aes(x=subject_race)) +
+  geom_bar()
+```
+
+This is OK, but ideally the categories of a bar chart would either be in a meaningful order, or ordered by their frequency.
+
+## Make a Factor
+
+In both cases above, the character data is converted into a factor in the process of making a table or the plot. If we don't like the default ordering, we can control it by explicitly making the variable a factor ourselves and setting the levels.
+
+The default order is alphabetical order, which is dependent on the locale of your computer (language and location settings).
+
+```{r}
+evp$subject_race <- factor(evp$subject_race, 
+                           levels=c("white", "black", "hispanic", "asian/pacific islander", "other"))
+head(evp$subject_race)
+table(evp$subject_race)
+```
+
+Here, we specified the levels in order, so they will appear that way. But we didn't say that any category is greater than or less than another -- there isn't an inherit order to the categories, even though we did set the order that they will display in.
+
+There aren't many cases where you're likely to do operations on a factor and actually need R to know which category is greater than another, but you can indicate that the factor is ordered if needed (ordered categorical data instead of just categorical data). Answers to scales from surveys is one case where ordered factors can be useful.
+
+```{r}
+answers <- c("Very unhappy", "Somewhat unhappy", "Somewhat happy", "Very happy", 
+             "Somewhat unhappy", "Somewhat happy", "Somewhat unhappy", "Somewhat happy",
+             "Very happy", "Very unhappy", "Very happy", "Very happy")
+answers <- factor(answers, 
+                  levels = c("Very unhappy", "Somewhat unhappy", "Somewhat happy", "Very happy"),
+                  ordered = TRUE)
+answers
+```
+
+You can see here that the levels are printed with less than signs `<` indicating a formal ordering that can be used in boolean comparisons.
+
+## EXERCISE
+
+Convert the vector below to a factor. Set the levels in an intentional order.
+
+```{r}
+directions <- c("east", "west", "east", "south", "north", "north", "west", "north", "east")
+```
+
+# Tidyverse (dplyr)
+
+```{r, eval=TRUE}
+library(tidyverse)
+```
+
+The data is from the [Stanford Open Policing Project](https://openpolicing.stanford.edu/data/) and includes vehicle stops by the Evanston police in 2017. We're reading the data in from a URL directly.
+
+```{r, eval=TRUE}
+police <- read_csv("https://raw.githubusercontent.com/nuitrcs/r-tidyverse/main/data/ev_police.csv",
+                   col_types=c( "location"="c"))
+```
+
+# dplyr
+
+dplyr is at the core of the tidyverse. It is for working with data frames. It contains six main functions, each a verb, of actions you frequently take with a data frame. We're covering 3 of those functions today (select, filter, mutate), and 3 more next session (group_by, summarize, arrange).
+
+Each of these functions takes a data frame as the first input. Within the function call, we can refer to the column names without quotes and without \$ notation.
+
+# Select: Choose Columns
+
+The previous session covered the basics of `select` but there are many more options for how we can specify which columns to choose.
+
+First, let's remember what the column names are:
+
+```{r}
+names(police)
+```
+
+Recall, the `select` function takes as the first input a data frame, and then we can list one or more columns, names unquoted, that we want to select. The columns will be ordered in the order we specify them.
+
+```{r}
+select(police, outcome, date)
+```
+
+## Ranges
+
+There are a number of select helper functions and special syntax options that allow us to choose multiple columns.
+
+First, we can use : for range, but with names in addition to numbers:
+
+```{r}
+select(police, raw_DriverRace:raw_ResultOfStop)
+```
+
+We can select the rightmost columns with `last_col()`:
+
+```{r}
+select(police, last_col())
+```
+
+Last 4 columns (the input to the function is the offset \# of columns from the right edge):
+
+```{r}
+select(police, 0:last_col(3))
+```
+
+## Excluding columns
+
+We can also say which columns we don't want by putting a `-` in front of the name:
+
+```{r}
+select(police, -raw_row_number, -subject_age)
+```
+
+When using negated `-` column names, if we start with negations, it will include all other columns, even if we try to specify some:
+
+```{r}
+select(police, -raw_row_number, -subject_age, time:outcome)
+```
+
+To both specify the columns wanted and exclude some that would otherwise be selected, the exclusions need to come at the end:
+
+```{r}
+select(police, location:type, -department_id)
+```
+
+## Reordering and renaming
+
+We've already seen that columns will appear in the result in the order that we list the names.
+
+The `everything()` helper function can be useful if you want to pull a few columns over to the left so that they are the ones that show first when you look at the data:
+
+```{r}
+select(police, outcome, everything())
+```
+
+Each column only gets included once, in the position that it first appears. So "outcome" becomes the leftmost column above and no longer appears in it's original spot.
+
+We can also rename columns while using `select()`. The syntax is `new_name = old_name`.
+
+```{r}
+select(police, raw_id=raw_row_number, date, time)
+```
+
+or we can use `rename()` to only rename, without affecting which columns are included or their order (all of the columns are kept in the same order):
+
+```{r}
+rename(police, raw_id=raw_row_number)
+```
+
+Remember, this doesn't change police because we didn't save the result. So far, we've just been printing the copy of the data frame that is returned by the function. If we want to change our data frame, we'd need to save the result back to the `police` object.
+
+```{r}
+police <- rename(police, raw_id=raw_row_number)
+```
+
+### EXERCISE
+
+Remember: run the cells above to load tidyverse and import the data.
+
+Using `select` and/or `rename` as needed:
+
+-   Rename subject_age to age, subject_race to race, and subject_sex to sex, but keep the columns in their original order
+-   Exclude the department_id and department_name columns
+
+Hint: remember that you can chain dplyr commands together with `%>%`.
+
+```{r}
+
+```
+
+## Matching names
+
+We can also select by matching patterns in the names of the columns. The patterns to match are in quotes because they aren't column names -- just character data.
+
+```{r}
+select(police, starts_with("contraband"))
+```
+
+```{r}
+select(police, ends_with("issued"))
+```
+
+```{r}
+select(police, contains("vehicle"))
+```
+
+We can also put a `-` in front of these helper functions to exclude columns:
+
+```{r}
+select(police, -contains("subject"))
+```
+
+And there are even more [select helper functions](https://tidyselect.r-lib.org/reference/select_helpers.html).
+
+### EXERCISE
+
+Use `select()` to get a copy of `police` without the columns that start with "raw".
+
+```{r}
+
+```
+
+Hint: If you mess up your `police` dataset, re-run the cell near the top of the file under the Data header and read the data in again fresh.
+
+## Selecting with Vectors or Functions
+
+What if we have the names of the columns we want to select in a vector already? For example:
+
+```{r}
+analysis_vars <- c("search_basis", "reason_for_stop")
+```
+
+Perhaps we built this vector programatically (we wrote code to determine the values, instead of typing them ourselves), so we can't just rewrite it to:
+
+```{r}
+select(police, search_basis, reason_for_stop)
+```
+
+If we just give the vector to `select`, it looks like we expect "analysis_vars" to be a column name in police. We get a warning:
+
+```{r}
+select(police, analysis_vars)
+```
+
+This warning tells us what we should do instead, which is use `all_of`:
+
+```{r}
+select(police, all_of(analysis_vars))
+```
+
+This makes it clearer that "analysis_vars" isn't the name of a column in police.
+
+What if we want to select columns of a certain type -- for example, only the numeric columns?
+
+```{r}
+select(police, where(is.numeric))
+```
+
+`is.numeric` is the name of a function. We just use the name without `()`. This function is applied to each column, and if it returns TRUE, then the column is selected. Like above with using a vector, we wrap the function we want to use in `where` to make it clear that we're using a function, not looking for a column named "is.numeric").
+
+`where` can be used with any function that returns a *single* TRUE or FALSE value for each column.
+
+# Filter: Choose Rows
+
+The `filter()` function lets us choose which rows of data to keep by writing expressions that return TRUE or FALSE for every row in the data frame. Recall from last session:
+
+```{r}
+filter(police, date == "2017-01-02")
+```
+
+We can do complex conditions as we could do with `[]`
+
+```{r}
+filter(police, subject_race == "hispanic" & subject_sex == "female")
+```
+
+If we include multiple comma-separated conditions, they are joined with `&` and. So this following is equivalent to the above.
+
+```{r}
+filter(police, subject_race == "hispanic", subject_sex == "female")
+```
+
+### EXERCISE
+
+1.  Filter `police` to choose the rows where location is 60201 or 60202
+2.  Filter `police` to choose the rows where location is 60201 or 60202 and subject_sex is "male"
+
+Hints:
+
+-   The "or" operator is `|`; the "and" operator is `&`
+
+```{r}
+
+```
+
+## Including Variable Transformations
+
+When filtering, we can include transformations of variables in our expressions. To see this, we'll use the built-in `mtcars` dataset, which, unlike the `police` data, has some numeric variables.
+
+Here's what `mtcars` looks like:
+
+```{r}
+mtcars
+```
+
+Now, let's filter to see which cars have above average mpg:
+
+```{r}
+filter(mtcars, mpg > mean(mpg))
+```
+
+Or which car has the most horsepower (hp):
+
+```{r}
+filter(mtcars, hp == max(hp))
+```
+
+### EXERCISE
+
+Using `mtcars`, find the car with the minimum (`min`) displacement (disp) value:
+
+```{r}
+
+```
+
+# Bonus: slice variants
+
+Last session, we saw `slice()` briefly as a way to choose which rows we want by their integer index value. But, there are some useful variants on the `slice` function that help us select rows that have the maximum or minimum value of a particular variable:
+
+```{r}
+slice_max(mtcars, hp)
+```
+
+By default it just gives us one row, but we can ask for more than one by setting the `n` argument:
+
+```{r}
+slice_max(mtcars, hp, n=3)
+```
+
+We got 4 rows above because there was a tie at position 3. There's an option `with_ties` that can change how ties are handled.
+
+There's also a minimum version:
+
+```{r}
+slice_min(mtcars, disp)
+```
+
+# Mutate: Change or Create Columns
+
+`mutate()` is used to both change the values of an existing column and make a new column.
+
+We name the column we're mutating and set the value. If the name already exists, it will update the column. If the name doesn't exist, it will create a new variable (column is appended at the end of existing columns).
+
+```{r}
+mutate(police, vehicle_age = 2017 - vehicle_year) %>%
+  select(starts_with("vehicle"))  # just to pick a few columns to look at
+```
+
+We can put multiple mutations in the same call to mutate, with the expressions separated by commas:
+
+```{r}
+mutate(police, 
+       vehicle_age = 2017 - vehicle_year,
+       old_car = vehicle_year < 2000)
+```
+
+Within a call to mutate, we can refer to variables we made or changed earlier in the same call as well. Here, we create vehicle_age, and then use it to create vehicle_age_norm:
+
+```{r}
+police %>% 
+  mutate(vehicle_age = 2017 - vehicle_year, 
+         vehicle_age_norm = ifelse(vehicle_age < 0,  # ifelse test condition
+                                   0,  # value if true
+                                   vehicle_age)  # value if false
+         ) %>%  
+  # below is just making it easier for us to see what we changed
+  select(starts_with("vehicle")) %>%
+  filter(vehicle_age < 0)
+```
+
+Side note: there is a tidyverse version of `ifelse()` called `if_else()` that works generally the same except it is stricter about checking data types.
+
+`mutate()` can also change an existing column. The location column in the data contains zip codes, that were read in as numeric values. This means the leading zero on some zip codes has been lost. Convert location to character data, and add back in the leading 0 if it should be there.
+
+Here I'll change the location column twice in the same call with two different transformations:
+
+```{r}
+police %>%
+  mutate(location = as.character(location),  # first convert to character, then recode below
+         location = ifelse(nchar(location) == 4,  # ifelse test (vector of TRUE and FALSE)
+                           paste0("0", location), # value if TRUE
+                           location)) %>%  # value if FALSE
+  select(location) %>%  # selecting just the column we mutated to look at
+  filter(startsWith(location, "0"))  # selecting a few rows to look at the change
+```
+
+Remember that when using `mutate()`, you're operating on the entire column at once, so you can't select just a subset of the vector as you would with `[]`. This means more frequently using functions like `ifelse()` or helper functions such as `na_if()`, `replace_na()`, or `recode()`.
+
+`na_if` replaces an existing value with `NA`. `replace_na` does roughly the opposite: replaces `NA` with a new value.
+
+```{r}
+mutate(police, vehicle_make = na_if(vehicle_make, "UNK"))
+```
+
+`na_if()` can only can check and replace one value at a time; it also can't be used with any expressions (`x <= 1`) -- only single values.
+
+### EXERCISE
+
+If beat is "/" or "CHICAGO", set it to `NA` instead using `mutate()`.
+
+Hint: it's ok if you take two steps to do this.
+
+```{r}
+
+```
