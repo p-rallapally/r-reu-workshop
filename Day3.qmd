@@ -1,10 +1,10 @@
 ---
-title: "Day 3"
 output:
-  learnr::tutorial:
-    progressive: true
-    allow_skip: true
-runtime: shiny_prerendered
+  html_document:
+    df_print: paged
+    code_download: TRUE
+    toc: true
+    toc_depth: 1
 editor_options:
   chunk_output_type: console
 ---
@@ -248,6 +248,7 @@ Convert the vector below to a factor. Set the levels in an intentional order.
 
 ```{r}
 directions <- c("east", "west", "east", "south", "north", "north", "west", "north", "east")
+
 ```
 
 # Tidyverse (dplyr)
@@ -297,7 +298,7 @@ As with `[]` indexing, columns will be returned in the order specified:
 select(police, subject_sex, subject_race, date)
 ```
 
-We could also use the column index number if we wanted to instead. We don\'t need to put the values in `c()` like we would with `[]` (but we could).
+We could also use the column index number if we wanted to instead. We don't need to put the values in `c()` like we would with `[]` (but we could).
 
 ```{r}
 select(police, 1, 4, 10)
@@ -389,8 +390,6 @@ Using `select` and/or `rename` as needed:
 
 -   Rename subject_age to age, subject_race to race, and subject_sex to sex, but keep the columns in their original order
 -   Exclude the department_id and department_name columns
-
-Hint: remember that you can chain dplyr commands together with `%>%`.
 
 ```{r}
 
@@ -533,7 +532,7 @@ Using `mtcars`, find the car with the minimum (`min`) displacement (disp) value:
 
 # Slice
 
-Unlike `select()`, we can\'t use row numbers to index which rows we want with filter. This gives an error:
+Unlike `select()`, we can't use row numbers to index which rows we want with filter. This gives an error:
 
 ```{r}
 filter(mtcars, 10)
@@ -549,7 +548,7 @@ slice(mtcars, 10)
 slice(mtcars, 10:15)
 ```
 
-We don\'t usually use `slice()` in this way when working with dplyr. This is because we ideally want to be working with well-structured data, where we can reorder the rows without losing information. If reordering the rows in the dataset would result in a loss of information (it would mess up your data), then the dataset is missing an important variable -- maybe just a sequence index. You should always be able to use a variable to order the data if needed.
+We don't usually use `slice()` in this way when working with dplyr. This is because we ideally want to be working with well-structured data, where we can reorder the rows without losing information. If reordering the rows in the dataset would result in a loss of information (it would mess up your data), then the dataset is missing an important variable -- maybe just a sequence index. You should always be able to use a variable to order the data if needed.
 
 ## Bonus: slice variants
 
@@ -591,7 +590,7 @@ as
 police %>% select(date, time)
 ```
 
-and you\'ll often see code formatted, so `%>%` is at the end of each line, and the following line that are still part of the same expression are indented:
+and you'll often see code formatted, so `%>%` is at the end of each line, and the following line that are still part of the same expression are indented:
 
 ```{r}
 police %>%
@@ -608,7 +607,7 @@ police %>%
   filter(subject_race == "white")
 ```
 
-We would read the `%>%` in the command above as \"then\" if reading the code outloud: from police, select subject_race and subject_sex, then filter where subject_race is white.
+We would read the `%>%` in the command above as "then" if reading the code outloud: from police, select subject_race and subject_sex, then filter where subject_race is white.
 
 This works because the dplyr functions take a tibble/data frame as the first argument (input) and return a tibble/data frame as the output. This makes it easy to pass a data frame through multiple operations, changing it one step at a time.
 
@@ -620,7 +619,7 @@ police %>%
   filter(subject_race == "white")
 ```
 
-Because `subject_race` is no longer in the data frame once we try to filter with it. We\'d have to reverse the order:
+Because `subject_race` is no longer in the data frame once we try to filter with it. We'd have to reverse the order:
 
 ```{r}
 police %>%
@@ -637,16 +636,16 @@ is.na(police$beat) %>% sum()
 
 ## EXERCISE
 
-Select the date, time, and outcome (columns) of stops that occur in beat \"71\" (rows). Make use of the `%>%` operator.
+Select the date, time, and outcome (columns) of stops that occur in beat "71" (rows). Make use of the `%>%` operator.
 
 The equivalent base R expression would be: `police[police$beat == "71", c("date", "time", "outcome")]`
 
-Hint: remember that a column needs to still be in the data frame if you\'re going to use the column to filter.
+Hint: remember that a column needs to still be in the data frame if you're going to use the column to filter.
 
 ```{r}
 ```
 
-Note that so far, we haven\'t actually changed the `police` data frame at all. We\'ve written expressions to give us output, but we haven\'t saved it.
+Note that so far, we haven't actually changed the `police` data frame at all. We've written expressions to give us output, but we haven't saved it.
 
 Sometimes we may still want to save the result of some expression, such as after performing a bunch of data cleaning steps. We can assign the output of piped commands as we would with any other expression.
 
@@ -656,9 +655,10 @@ police60201 <- police
 
 ## EXERCISE
 
-From the `mtcars` data select only vehicle_year and vehicle_make columns for observations where there were contraband_weapons
+From the `police` data select only vehicle_year and vehicle_make columns for observations where there were contraband_weapons
 
 ```{r}
+
 ```
 
 # Mutate: Change or Create Columns
@@ -676,7 +676,7 @@ We can put multiple mutations in the same call to mutate, with the expressions s
 
 ```{r}
 mutate(police, 
-       vehicle_age = 2017 - vehicle_year,
+       vehicle_age = 2023 - vehicle_year,
        old_car = vehicle_year < 2000)
 ```
 
@@ -684,7 +684,7 @@ Within a call to mutate, we can refer to variables we made or changed earlier in
 
 ```{r}
 police %>% 
-  mutate(vehicle_age = 2017 - vehicle_year, 
+  mutate(vehicle_age = 2023 - vehicle_year, 
          vehicle_age_norm = ifelse(vehicle_age < 0,  # ifelse test condition
                                    0,  # value if true
                                    vehicle_age)  # value if false
@@ -736,7 +736,7 @@ If we have time, we will learn three additional dplyr functions: group_by, summa
 
 # Summarize
 
-We\'ll start with `summarize()` (or `summarise()` - British spelling is accepted). We use `mutate()` when we want the output to have the same length as the input -- when we\'re operating on the individual elements in a vector - we want a value for every row in the data. When we want to condense multiple values down to a single (or a few values), such as taking the mean or standard deviation of a vector), we use summarize instead.
+We'll start with `summarize()` (or `summarise()` - British spelling is accepted). We use `mutate()` when we want the output to have the same length as the input -- when we're operating on the individual elements in a vector - we want a value for every row in the data. When we want to condense multiple values down to a single (or a few values), such as taking the mean or standard deviation of a vector), we use summarize instead.
 
 ```{r}
 police %>% 
@@ -744,7 +744,7 @@ police %>%
   summarize(mean_vehicle_age = mean(vehicle_age))
 ```
 
-Note that even though there\'s just one value, we get a tibble returned. This is what to expect with the tidyverse.
+Note that even though there's just one value, we get a tibble returned. This is what to expect with the tidyverse.
 
 As a side note, if we needed the single value (or a single vector), we could `pull()` it out of the tibble/data frame:
 
@@ -766,7 +766,7 @@ police %>%
             max_date = max(date))
 ```
 
-We get one column per summary variable we create. Once we group below, we\'ll see why we get the output in columns instead of rows.
+We get one column per summary variable we create. Once we group below, we'll see why we get the output in columns instead of rows.
 
 ## EXERCISE
 
@@ -780,16 +780,16 @@ Use summarize to compute the `min()` and `max()` `vehicle_year`
 
 If we want to apply the same summary functions to multiple columns in our data frame, we can write out all of the summary commands explicitly, or we can use `across()` to select which variables to summarize with which functions.
 
-Let\'s use the `n_distinct()` function to count the number of distinct values in each column (`n_distinct(x)` is the same as `length(unique(x))`. This will help us see which columns don\'t have useful information because every value is the same.
+Let's use the `n_distinct()` function to count the number of distinct values in each column (`n_distinct(x)` is the same as `length(unique(x))`. This will help us see which columns don't have useful information because every value is the same.
 
-`across()` selects columns using the helper functions you could give to `select()` directly. We\'ll use `everything()` here to select all columns.
+`across()` selects columns using the helper functions you could give to `select()` directly. We'll use `everything()` here to select all columns.
 
 ```{r}
 police %>%
   summarize(across(everything(), n_distinct))
 ```
 
-If you wanted to select columns using their names, put them in a vector (so it\'s a single input argument):
+If you wanted to select columns using their names, put them in a vector (so it's a single input argument):
 
 ```{r}
 police %>%
@@ -814,7 +814,7 @@ police %>%
 
 # Group By
 
-With base R, when we want to compute summary measures or do other computation on groups in our data (as defined by some grouping variable), we use functions such as `tapply()` or `aggregate()`. With dplyr, we can explicitly group our tibble into subgroups. This isn\'t very useful by itself, but it is often combined with `summarize()` to compute summary measures by group.
+With base R, when we want to compute summary measures or do other computation on groups in our data (as defined by some grouping variable), we use functions such as `tapply()` or `aggregate()`. With dplyr, we can explicitly group our tibble into subgroups. This isn't very useful by itself, but it is often combined with `summarize()` to compute summary measures by group.
 
 First, what if we just group:
 
@@ -823,9 +823,9 @@ police %>%
   group_by(outcome) # print this to the console
 ```
 
-we see that it tells us that the tibble (data frame) is grouped by outcome, and that there are two groups. It doesn\'t rearrange the rows, it just keeps track of the groups for us.
+we see that it tells us that the tibble (data frame) is grouped by outcome, and that there are two groups. It doesn't rearrange the rows, it just keeps track of the groups for us.
 
-Now, combine with summarize. But first, let\'s make the `vehicle_age` column we\'ve been using actually part of the `police`dataset so that we don\'t have to keep creating it:
+Now, combine with summarize. But first, let's make the `vehicle_age` column we've been using actually part of the `police`dataset so that we don't have to keep creating it:
 
 ```{r}
 police <- mutate(police, vehicle_age = 2023-vehicle_year)
@@ -842,7 +842,7 @@ police %>%
 
 Now we get one row for each group, and one column for each summary measure.
 
-We can group by multiple columns, and we\'ll get all of the combinations of values present across the columns:
+We can group by multiple columns, and we'll get all of the combinations of values present across the columns:
 
 ```{r}
 police %>% 
@@ -851,7 +851,7 @@ police %>%
             sd_vehicle_age = sd(vehicle_age))
 ```
 
-Let\'s compute the ratio of warnings to citations by subject_race - note that we can use the variables we create in later expressions within the same call to `summarize()`:
+Let's compute the ratio of warnings to citations by subject_race - note that we can use the variables we create in later expressions within the same call to `summarize()`:
 
 ```{r}
 police %>%
@@ -866,11 +866,12 @@ police %>%
 Compute the `min()` and `max()` `vehicle_year` for each `vehicle_make`.
 
 ```{r}
+
 ```
 
 # Arrange
 
-Finally, we come to `arrange()`, which is how we sort the rows in our data. We would mostly use this when viewing our data, but it\'s also useful when we need to compute a time series (lags and leads in the data), when we want to select just a few rows from each group, or any other order-sensitive transformations on our data.
+Finally, we come to `arrange()`, which is how we sort the rows in our data. We would mostly use this when viewing our data, but it's also useful when we need to compute a time series (lags and leads in the data), when we want to select just a few rows from each group, or any other order-sensitive transformations on our data.
 
 ```{r}
 arrange(police, time)
@@ -903,11 +904,12 @@ police %>%
 Sort the data by `vehicle_make` and then `vehicle_year`.
 
 ```{r}
+
 ```
 
 ## Count
 
-A bonus function that I use frequently: `count()`. It\'s how you\'d get output similar to `table()`
+A bonus function that I use frequently: `count()`. It's how you'd get output similar to `table()`
 
 By itself, it counts the number of rows:
 

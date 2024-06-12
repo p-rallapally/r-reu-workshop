@@ -1,10 +1,10 @@
 ---
-title: "Day 2"
 output:
-  learnr::tutorial:
-    progressive: true
-    allow_skip: true
-runtime: shiny_prerendered
+  html_document:
+    df_print: paged
+    code_download: TRUE
+    toc: true
+    toc_depth: 1
 editor_options:
   chunk_output_type: console
 ---
@@ -39,6 +39,7 @@ options(repos = r)
 -   What are functions? Write out an example of a nested function.
 
 ```{r, recap, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 -   How would you set the working directory in RStudio? Set the working directory for today's session.
@@ -46,6 +47,7 @@ options(repos = r)
 -   Write out the command to list all the files in your working directory
 
 ```{r, recap0, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 -   What is the difference between a Vector and a DataFrame?
@@ -53,16 +55,19 @@ options(repos = r)
 
 ```{r, recap1, exercise=TRUE, exercise.eval = FALSE}
 x <- c(3,6,8,0,-1,4)
+
 ```
 
 -   Get all elements of `x` greater than 2
 
 ```{r, recap2, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 -   Find the sum of all elements of `x`
 
 ```{r, recap3, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 -   Where can you look up the documentation for R functions? Find help on the function `write.csv`
@@ -70,11 +75,13 @@ x <- c(3,6,8,0,-1,4)
 -   Read in the file `ev_police_jan.csv` from the data folder
 
 ```{r, recap6, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 -   Install the `palmerpenguins` package and load it into the R workspace.
 
 ```{r, recap7, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Working with DataFrames
@@ -90,6 +97,7 @@ We learnt about importing data and loading it from packages. Most often, you wil
 Import and print the contents of the file `ev_police_jan.csv` from the data folder.
 
 ```{r}
+
 ```
 
 Sometimes you might encounter an error. Below are some tips if you get an error message that a file can't be found when you're trying to import it:
@@ -131,7 +139,7 @@ class(penguins)
 
 "tbl_df" is a tibble data frame. These behave a little bit differently from normal data frames. You'll see tibbles instead of data frames within the tidyverse set of packages (and those packages that work within that framework).
 
-The biggest difference is that tibbles give you a tibble back when subsetting with [], while data frames sometimes give you a vector.
+The biggest difference is that tibbles give you a tibble back when subsetting with \[\], while data frames sometimes give you a vector.
 
 View the first few rows
 
@@ -209,6 +217,8 @@ Using the `x` data frame, write commands to figure out:
 x <- data.frame(month=month.name,
                 index=1:12,
                 days=c(31,28,31,30,31,30,31,31,30,31,30,31))
+
+
 ```
 
 ## Indexing Basics
@@ -258,6 +268,7 @@ x[c(1, 3), ]
 Using `x` created above: select rows 2 through 5, and columns 1 through 2 from `x`
 
 ```{r, i7, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Names
@@ -306,6 +317,7 @@ Using the `penguins` data frame:
 -   Select the bill length and bill depth columns by name using `[]`
 
 ```{r, n7, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Boolean/Conditional Selection
@@ -324,7 +336,7 @@ penguins[penguins$bill_length_mm < 34,]
 
 Note the rows of `NA`.
 
-Remember: the expression inside [] needs to be a complete expression. So we must use both the data frame name and the column name.
+Remember: the expression inside \[\] needs to be a complete expression. So we must use both the data frame name and the column name.
 
 If we don't want the missing rows included:
 
@@ -454,11 +466,13 @@ penguins[, c("bill_length_cm", "bill_length_mm")]  # select the two vars to view
 Make a variable that has bill length in **centimeters (cm)** instead of **millimeters (mm)**
 
 ```{r, var8, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 Using `x` created above: make a new variable as part of `x`, called `weeks`, that is the number of days divided by 7.
 
 ```{r, var9, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Missing values
@@ -620,7 +634,7 @@ What percentage of Toyota drivers are male? What percentage of drivers in the da
 
 ```
 
-## Data Visualization 
+## Data Visualization
 
 Often, plotting your data will be much more informative than summary statistics alone. R has built-in plotting functions, as well as several packages such as *ggplot* which offer advanced plotting capabilities.
 
@@ -719,7 +733,7 @@ Typically, to build or describe any visualization with one or more dimensions, w
 
 3.  **Scale:** Do we need to scale the potential values, use a specific scale to represent multiple values or a range? For example you can scale the data to log of the original values.
 
-4.  **Geometric objects:** These are popularly known as \'geoms\'. This would cover the way we would depict the data points on the visualization. Should it be points, bars, lines and so on?
+4.  **Geometric objects:** These are popularly known as 'geoms'. This would cover the way we would depict the data points on the visualization. Should it be points, bars, lines and so on?
 
 5.  **Statistics:** Do we need to show some statistical measures in the visualization like measures of central tendency, spread, confidence intervals?
 

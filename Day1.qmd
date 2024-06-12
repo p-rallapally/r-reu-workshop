@@ -1,10 +1,10 @@
 ---
-title: "Day 1"
 output:
-  learnr::tutorial:
-    progressive: true
-    allow_skip: true
-runtime: shiny_prerendered
+  html_document:
+    df_print: paged
+    code_download: TRUE
+    toc: true
+    toc_depth: 1
 editor_options:
   chunk_output_type: console
 ---
@@ -53,6 +53,8 @@ Welcome to R for Complete Beginners! In this workshop, we're going to cover:
 
 To be fair, this first session can be a little bit boring; but it's really important. There's a lot of foundational stuff to cover before we actually start working with data. If, throughout today, you're wondering how this all works for analyzing your data, the simple answer is that it doesn't directly. We won't be working with a dataset today. After many years of seeing people jump in and start working with a data set and someone else's code in R, I've found that it's worth it to go through the basics first. We'll start working with datasets (via data frames) in the next workshop.
 
+Note - useful info
+
 ## RStudio panel layout
 
 The RStudio user interface has 4 primary panes:
@@ -68,45 +70,6 @@ The RStudio user interface has 4 primary panes:
 Each pane can be minimized or maximized within the column by clicking the minimize/maximize buttons ![The min-max button which shows a collapsed or expanded Window.](https://docs.posit.co/ide/user/ide/guide/ui/images/min-max.png){alt="The min-max button which shows a collapsed or expanded Window." width="25" height="14"}.
 
 ![](images/rstudio-panes-labeled.jpeg){width="650"}
-
-## Let's get our hands dirty with code!
-
-R is a very powerful tool for scientific analysis and data visualization. Let's suppose that you are a penguin researcher, and you have collected data from different species of penguins by measuring their anatomical features such as flipper length, body mass, beak size etc. Now you want to investigate if bill length and bill depth are related to each other.
-
-![](images/culmen_depth_modified.png){width="476"}
-
-Copy the code below and execute it in the console to find out!
-
-```{r, plot1, exercise=TRUE, exercise.eval = FALSE, message=FALSE, warning=FALSE, results='hide'}
-install.packages("palmerpenguins")
-library(palmerpenguins)
-
-install.packages("tidyverse")
-library(tidyverse)
-
-bill_len_dep <- ggplot(data = penguins,
-                         aes(x = bill_length_mm,
-                             y = bill_depth_mm,
-                             group = species)) +
-  geom_point(aes(color = species, 
-                 shape = species),
-             size = 3,
-             alpha = 0.8) +
-  geom_smooth(method = "lm", se = FALSE, aes(color = species)) +
-  scale_color_manual(values = c("darkorange","purple","cyan4")) +
-  labs(title = "Penguin bill dimensions",
-       subtitle = "Bill length and depth for Adelie, Chinstrap and Gentoo Penguins at Palmer Station LTER",
-       x = "Bill length (mm)",
-       y = "Bill depth (mm)",
-       color = "Penguin species",
-       shape = "Penguin species") +
-  theme(legend.position = c(0.85, 0.15),
-        plot.title.position = "plot",
-        plot.caption = element_text(hjust = 0, face= "italic"),
-        plot.caption.position = "plot")
-
-bill_len_dep + theme_bw()
-```
 
 ## Console and R Commands
 
@@ -154,6 +117,7 @@ TRUE | FALSE
 Type some math equations in the console. Lacking inspiration? What's the square root of 394, minus 5, cubed? How many years have people in your family been alive together? What year was someone who just turned 93 born? What's the area of a circle with radius 5 (hint: R knows `pi`)?
 
 ```{r, math4, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Functions
@@ -206,9 +170,10 @@ x <- x + 1
 
 ### EXERCISE
 
-The `runif()` function produces random numbers from a uniform distribution between 0 and 1. `runif(1)` produces 1 random value. Save the result of calling this function to a variable. Then type the variable name in the console to see the value.
+The `runif()` function produces random numbers from a uniform distribution between 0 and 1. `runif(1)` produces 1 random value. Save the result of calling this function to a variable. Then type x the variable name in the console to see the value.
 
 ```{r, var4, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Spacing
@@ -296,6 +261,7 @@ setwd("r-reu-workshop/")  # this is an example -- file path needs to be valid
 Make the folder on your computer with the files for this workshop (what you downloaded) the working directory. Use the `setwd()` function or navigate to the folder in the Files window and then choose Set As Working Directory from the More menu. Then test that you're in the right place by running `list.files()` in the console. `dataframes.Rmd` should be listed among the results, as should a `data` folder.
 
 ```{r, help2, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Reading in (Importing) Data
@@ -324,6 +290,7 @@ Read in (import) the `ev_police_jan.csv` data file that's in the data directory,
 Note: Evanston police data comes from the [Stanford Open Policing Project](https://openpolicing.stanford.edu/data/).
 
 ```{r, read3, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Vectors
@@ -363,7 +330,7 @@ To access a range of values, use a colon. The endpoints of the range are inclusi
 x[1:3]
 ```
 
-You can specify non-adjacent index positions by putting a vector inside []. Elements are returned in the order the index values appear:
+You can specify non-adjacent index positions by putting a vector inside \[\]. Elements are returned in the order the index values appear:
 
 ```{r, vec6, exercise=TRUE, exercise.eval = FALSE, exercise.setup = "vec1"}
 x[c(3, 1, 2)]
@@ -382,6 +349,7 @@ You can't mix positive and negative indices.
 In the console or an open R Script file, make a vector called fav_numbers and put 5 numbers in it. Then write an expression to select just the 4th value from that vector. Hint: remember the `c()` function.
 
 ```{r, vec8, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Vectors with Functions
@@ -547,6 +515,7 @@ x <- 5  # this is also a comment
 See the [`example_r_script.R`](example_r_script.R) file for an example. Here's what's in that file:
 
 ```{r, code=xfun::read_utf8("example_r_script.R"), eval=FALSE}
+
 ```
 
 From a script file, you can send code to the console (you don't have to copy and paste it). You put your cursor in the line you want to run, then press the Command and Return keys (on a Mac) or Control and Return keys (for Windows). The cursor progresses to the next command after you hit Return.
@@ -566,6 +535,7 @@ If you highlight commands, it will send just what's highlighted.
 -   Save your file.
 
     ```{r, code2, exercise=TRUE, exercise.eval = FALSE}
+
     ```
 
 ### R Markdown
@@ -602,11 +572,13 @@ Now that you are familiar with most of the basics, let's come back to the Pengui
 Install the `palmerpenguins` package and load it into the R workspace.
 
 ```{r, p1, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 There's a data frame in the package called `penguins`. Like with functions in a package, we can use it once we've loaded the package with the library command above. View this dataframe.
 
 ```{r, p2, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 Clicking on the name of the data frame in the environment tab will also open the viewer.
@@ -682,6 +654,7 @@ penguins[, c("flipper_length_cm", "flipper_length_mm")]  # select the two vars t
 Now create a new column called `body_mass_kg` from the column `body_mass_g` that is the body mass in grams divided by 1000.
 
 ```{r, p11, exercise=TRUE, exercise.eval = FALSE}
+
 ```
 
 ## Day 1 complete!
