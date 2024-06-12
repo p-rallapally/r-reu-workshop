@@ -10,21 +10,6 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-
-library(learnr)
-
-tutorial_options(
-  exercise.timelimit = 60,
-  # A simple checker function that just returns the message in the check chunk
-  exercise.checker = function(check_code, ...) {
-    list(
-      message = eval(parse(text = check_code)),
-      correct = logical(0),
-      type = "info",
-      location = "append"
-    )
-  }
-)
 knitr::opts_chunk$set(error = TRUE)
 
 r <- getOption("repos")
