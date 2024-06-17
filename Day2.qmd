@@ -36,6 +36,7 @@ options(repos = r)
 ```
 
 -   What is the difference between a Vector and a DataFrame?
+
 -   Get the second element of the vector `x` below
 
 ```{r, recap1, exercise=TRUE, exercise.eval = FALSE}
@@ -63,17 +64,11 @@ x <- c(3,6,8,0,-1,4)
 
 ```
 
--   Install the `palmerpenguins` package and load it into the R workspace.
-
-```{r, recap7, exercise=TRUE, exercise.eval = FALSE}
-
-```
-
 ## Working with DataFrames
 
 Today we will cover some of the basics of working with data frames. We're focused here on using the built-in, base R functions and features to work with data frames. It's good to understand these basics so that you can read R code that others write, and you can perform basic functions without other packages. However, in my daily work, I use the [tidyverse](https://github.com/nuitrcs/r-tidyverse) packages to work with data frames.
 
-### Getting Data from a File
+## Getting Data from a File
 
 We learnt about importing data and loading it from packages. Most often, you will be reading in a data from a file like we learnt yesterday. As with other variables, when we type the name of the data frame, it will print the contents of the variable to the console.
 
@@ -93,7 +88,7 @@ Sometimes you might encounter an error. Below are some tips if you get an error 
 
 3)  Make sure the file is actually in the folder you think it is. I recommend copying or moving any downloaded files into the project/directory for this workshop so you know you really have the file. I've seen some problems on Windows computers in particular before where a .zip file isn't really unzipped - it's just letting you see inside without actually expanding the contents and creating real files.
 
-### Creating data frames manually
+## Creating data frames manually
 
 It's also possible to create a data frame from scratch. You will not do this often.
 
@@ -104,14 +99,16 @@ x <- data.frame(month=month.name,
 x
 ```
 
-### From a Package
+## Using a data frame from a Package
 
 Let's explore the `penguins` dataset from <https://github.com/allisonhorst/palmerpenguins>. It's been included in an R package.
 
-First, check that `penguins` is present in your workspace. Hint: use the `View()` function.
+You need to have the `palmerpenguins` installed. (You can run `install.packages("palmerpenguins")` in your console.) You also need to load the package in your environment (run `library(palmerpenguins)`).
+
+Check that `penguins` is present in your workspace. Hint: use the `View()` function.
 
 ```{r, loaddata, exercise=TRUE, exercise.eval = FALSE}
-penguins
+
 ```
 
 ## Data Shape and Names
@@ -143,12 +140,6 @@ dim(penguins)
 Rows is the first number, columns second.
 
 What will the length of a data frame be?
-
-```{r}
-length(penguins)
-```
-
-\# of columns. This is because it's technically a list of vectors (lists are a different type). Don't use length with a data frame; use `ncol()` instead:
 
 ```{r}
 ncol(penguins)
@@ -189,7 +180,7 @@ Quick summary of every column
 summary(penguins)
 ```
 
-## EXERCISE
+### EXERCISE
 
 Run the code that creates the `x` data frame.
 
@@ -234,7 +225,7 @@ This gave us a tibble/data.frame back, but with `x`:
 x[,1]
 ```
 
-we get a vector back. This is one difference between tibbles and regular data frames.
+we get a vector back. As I mentioned, this is one difference between tibbles and regular data frames.
 
 We can select rows and columns at the same time:
 
@@ -276,7 +267,7 @@ Note that the `$` notation got us a vector back.
 penguins$bill_length_mm
 ```
 
-Use names in `[]`: put them in quotes like we learnt earlier
+Use names in `[]`: put them in quotes
 
 ```{r, n4, exercise=TRUE, exercise.eval = FALSE}
 penguins[,"species"]
@@ -316,7 +307,7 @@ penguins$bill_length_mm < 34
 Select the rows where bill length is less than 34:
 
 ```{r, b2, exercise=TRUE, exercise.eval = FALSE}
-penguins[penguins$bill_length_mm < 34,]
+penguins[penguins$bill_length_mm < 34, ]
 ```
 
 Note the rows of `NA`.
@@ -361,7 +352,7 @@ Using `x` created above: select rows from `x` with 31 days. Use `==` for testing
 
 ## Renaming Columns
 
-Normally we don't need to do this first, but I want to keep the current names so I can reset the names later
+Normally we don't need to do this first, but I want to keep the current names so I can reset the names later:
 
 ```{r, rename1, exercise=TRUE, exercise.eval = FALSE}
 oldnames <- names(penguins)  # save so we can reset later
@@ -525,7 +516,85 @@ Using `x` created above: replace the `month` value "December" with the value "De
 
 ```
 
-## Data Frames Practice
+## Data Visualization
+
+Often, plotting your data will be much more informative than summary statistics alone. R has built-in plotting functions, as well as several packages such as *ggplot* which offer advanced plotting capabilities.
+
+### Points
+
+The `plot()` function is used to draw points (markers) in a diagram. The The function takes parameters for specifying points in the diagram. Parameter 1 specifies points on the **x-axis**. Parameter 2 specifies points on the **y-axis**. Let's see a simple example below.
+
+```{r}
+plot(1, 3)
+```
+
+To draw more points, use vectors.
+
+```{r}
+x <- c(1, 2, 3, 4, 5)
+y <- c(3, 7, 8, 9, 12)
+plot(x, y) 
+```
+
+Remember that data frame columns are also vectors!
+
+```{r}
+plot(penguins$bill_length_mm, penguins$bill_depth_mm)
+```
+
+### Lines
+
+The `plot()` function also takes a `type` parameter with the value `l` to draw a line to connect all the points in your plot
+
+```{r}
+plot(x, y, type='l') 
+```
+
+### Plot labels
+
+The `plot()` function also accept other parameters, such as `main`, `xlab` and `ylab` if you want to customize the graph with a main title and different labels for the x and y-axis.
+
+```{r}
+plot(x, y, main="My Amazing Graph", xlab="The x-axis", ylab="The y-axis")
+```
+
+### Graph Appearance
+
+There are many other parameters you can use to change the appearance of the points.
+
+Use `col="color"` to add color to the points.
+
+```{r}
+plot(x,y, col="red")
+```
+
+Use `cex=number` to change the size of the points (1 is default, while 0.5 means 50% smaller, and 2 means 100% larger)
+
+```{r}
+plot(x,y, cex=2)
+```
+
+Use `pch` with a value from 0 to 25 to change the point shape format.
+
+```{r}
+plot(x,y, pch=25, cex=2)
+```
+
+The values of the `pch` parameter ranges from 0 to 25, which means that we can choose up to 26 different types of point shapes
+
+![](https://www.w3schools.com/r/r_plot_pch2.png){width="208"}
+
+### EXERCISE
+
+Using the penguins data, plot body mass on y-axis vs flipper length on x-axis for the Chinstrap species. Choose the filled circle marker type and color the markers purple. Set marker size to 0.5, and label the axes and title the graph "Body mass vs Flipper length in Chinstrap penguins".
+
+```{r}
+
+```
+
+What can you say about the relationship between body mass and flipper size in this species?
+
+## Bonus 1: Data Frames Practice
 
 Here are some practice exercises for working with data frames. They all use the policing data here:
 
@@ -619,85 +688,7 @@ What percentage of Toyota drivers are male? What percentage of drivers in the da
 
 ```
 
-## Data Visualization
-
-Often, plotting your data will be much more informative than summary statistics alone. R has built-in plotting functions, as well as several packages such as *ggplot* which offer advanced plotting capabilities.
-
-### Points
-
-The `plot()` function is used to draw points (markers) in a diagram. The The function takes parameters for specifying points in the diagram. Parameter 1 specifies points on the **x-axis**. Parameter 2 specifies points on the **y-axis**. Let's see a simple example below.
-
-```{r}
-plot(1, 3)
-```
-
-To draw more points, use vectors.
-
-```{r}
-x <- c(1, 2, 3, 4, 5)
-y <- c(3, 7, 8, 9, 12)
-plot(x, y) 
-```
-
-Remember that data frame columns are also vectors!
-
-```{r}
-plot(penguins$bill_length_mm, penguins$bill_depth_mm)
-```
-
-### Lines
-
-The `plot()` function also takes a `type` parameter with the value `l` to draw a line to connect all the points in your plot
-
-```{r}
-plot(x, y, type='l') 
-```
-
-### Plot labels
-
-The `plot()` function also accept other parameters, such as `main`, `xlab` and `ylab` if you want to customize the graph with a main title and different labels for the x and y-axis.
-
-```{r}
-plot(x, y, main="My Amazing Graph", xlab="The x-axis", ylab="The y-axis")
-```
-
-### Graph Appearance
-
-There are many other parameters you can use to change the appearance of the points.
-
-Use `col="color"` to add color to the points.
-
-```{r}
-plot(x,y, col="red")
-```
-
-Use `cex=number` to change the size of the points (1 is default, while 0.5 means 50% smaller, and 2 means 100% larger)
-
-```{r}
-plot(x,y, cex=2)
-```
-
-Use `pch` with a value from 0 to 25 to change the point shape format.
-
-```{r}
-plot(x,y, pch=25, cex=2)
-```
-
-The values of the `pch` parameter ranges from 0 to 25, which means that we can choose up to 26 different types of point shapes
-
-![](https://www.w3schools.com/r/r_plot_pch2.png){width="208"}
-
-### EXERCISE
-
-Using the penguins data, plot body mass on y-axis vs flipper length on x-axis for the Chinstrap species. Choose the filled circle marker type and color the markers purple. Set marker size to 0.5, and label the axes and title the graph "Body mass vs Flipper length in Chinstrap penguins".
-
-```{r}
-
-```
-
-What can you say about the relationship between body mass and flipper size in this species?
-
-## Advanced data viz with *ggplot2*
+## Bonus 2: Advanced data viz with *ggplot2*
 
 The R package *ggplot2* is the most widely used and aesthetically pleasing graphics framework available in R. It relies on a structure called the "grammar of graphics". Essentially, it follows a layered approach to describe and construct the visualization.
 
