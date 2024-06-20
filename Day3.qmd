@@ -645,7 +645,7 @@ We name the column that we're mutating and set the value. If the name already ex
 
 ```{r}
 police %>% 
-  mutate(vehicle_age = 2024 - vehicle_year) %>%
+  mutate(vehicle_age = 2017 - vehicle_year) %>%
   select(starts_with("vehicle")) %>%   # just to pick a few columns to look at
   head() # Get only the first rows
 ```
@@ -655,7 +655,7 @@ We can put multiple mutations in the same call to mutate, with the expressions s
 ```{r}
 mutate(
   police, 
-  vehicle_age = 2024 - vehicle_year,
+  vehicle_age = 2017 - vehicle_year,
   old_car = vehicle_year < 2000
   )
 ```
@@ -663,19 +663,15 @@ mutate(
 Within a call to mutate, we can refer to variables that we made or changed earlier in the same call Here, we create vehicle_age, and then use it to create vehicle_age_norm:
 
 ```{r}
-threshold <- 10
 police %>% 
-  mutate(
-    vehicle_age = 2024 - vehicle_year, 
-    vehicle_age_norm = ifelse(
-      vehicle_age < threshold,  # ifelse test condition
-      0,  # value if true
-      vehicle_age
-      )  # value if false
+  mutate(vehicle_age = 2017 - vehicle_year, 
+         vehicle_age_norm = ifelse(vehicle_age < 0,  # ifelse test condition
+                                   0,  # value if true
+                                   vehicle_age)  # value if false
          ) %>%  
   # below is just making it easier for us to see what we changed
   select(starts_with("vehicle")) %>%
-  filter(vehicle_age < threshold)
+  filter(vehicle_age < 0)
 ```
 
 Side note: there is a tidyverse version of `ifelse()` called `if_else()` that works generally the same except that it is stricter about checking data types.
@@ -789,7 +785,7 @@ When we want to condense multiple values down to a single (or a few values), suc
 
 ```{r}
 police %>% 
-  mutate(vehicle_age = 2024-vehicle_year) %>% # computing a new variable first
+  mutate(vehicle_age = 2017-vehicle_year) %>% # computing a new variable first
   summarize(mean_vehicle_age = mean(vehicle_age))
 ```
 
@@ -808,7 +804,7 @@ We can compute more than one summary measure at the same time:
 
 ```{r}
 police %>% 
-  mutate(vehicle_age = 2024-vehicle_year) %>% # computing a new variable first
+  mutate(vehicle_age = 2017-vehicle_year) %>% # computing a new variable first
   summarize(
     mean_vehicle_age = mean(vehicle_age),
     sd_vehicle_age = sd(vehicle_age),
@@ -897,7 +893,7 @@ we see that it tells us that the tibble (data frame) is grouped by outcome, and 
 Now, we can combine with summarize. But first, let's make the `vehicle_age` column we've been using actually part of the `police`dataset so that we don't have to keep creating it:
 
 ```{r}
-police <- mutate(police, vehicle_age = 2024-vehicle_year)
+police <- mutate(police, vehicle_age = 2017-vehicle_year)
 ```
 
 Now, group and summarize:
