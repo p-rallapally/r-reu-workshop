@@ -38,6 +38,10 @@ safi <- read.csv("data/SAFI_clean.csv",  na = c("", "NULL", "NA"))
 -   Select the rows where no_membrs is between 2 and 5
 
 -   Load the ggplot2 package into your workspace and plot a graph to see if there is a relationship between no_membrs and rooms
+```{r}
+library(ggplot2)
+plot(safi$no_membrs, safi$rooms)
+```
 
 -   Add theme_classic and appropriate x, y, and title labels to your plot
 
